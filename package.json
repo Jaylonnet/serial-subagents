@@ -1,0 +1,61 @@
+{
+  "name": "opencode-serial-subagents",
+  "version": "0.1.0",
+  "description": "Opencode plugin that serializes parallel subagent (task) tool calls into a FIFO queue with a configurable timeout fallback.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "examples"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "prepublishOnly": "npm run build && npm run typecheck && bun test"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "plugin",
+    "subagent",
+    "task",
+    "queue",
+    "serial",
+    "fifo",
+    "concurrency",
+    "ai",
+    "agent"
+  ],
+  "author": "Jay",
+  "license": "MIT",
+  "homepage": "https://github.com/jay/serial-subagents#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jay/serial-subagents.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jay/serial-subagents/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.4.3",
+    "@types/bun": "latest",
+    "@types/node": "^22",
+    "typescript": "^5.8"
+  }
+}

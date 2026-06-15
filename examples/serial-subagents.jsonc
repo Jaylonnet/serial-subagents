@@ -1,0 +1,20 @@
+{
+  // Opencode plugin config for opencode-serial-subagents
+  "plugin": [
+    [
+      "opencode-serial-subagents",
+      {
+        // Max ms a single `task` call may hold its slot.
+        // If the call doesn't finish in this time, the slot is
+        // released and the next queued call proceeds.
+        // Default: 300000 (5 minutes). Set to 0 to disable the timer.
+        "timeoutMs": 300000,
+
+        // Max parallel `task` calls. 1 = fully serial.
+        // Values <= 0 are clamped to 1.
+        // Default: 1
+        "concurrency": 1
+      }
+    ]
+  ]
+}

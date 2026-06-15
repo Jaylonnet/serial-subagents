@@ -1,0 +1,6 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    ["opencode-serial-subagents", { "timeoutMs": 300000, "concurrency": 1 }]
+  ]
+}
