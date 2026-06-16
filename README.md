@@ -48,8 +48,31 @@ opencode runs `bun install` on the config-dir `package.json`; the committed `dis
 | --- | --- | --- | --- |
 | `timeoutMs` | number | `300000` (5 min) | Max time a `task` call may hold its slot. On expiry, the slot is force-released and the queue proceeds. Set to `0` to fall back to a microtask release. |
 | `concurrency` | number | `1` | Max parallel `task` calls. `1` = fully serial. Values `<= 0` are clamped to `1`. |
+| `stateFile` | string \| null | `<config>/opencode/serial-subagents.json` | Where `/serial` overrides are persisted. Set to `null` to disable persistence. |
 
 Both options are clamped defensively. `NaN`, negative numbers, and non-numeric values fall back to the defaults.
+
+## Runtime tuning (`/serial`)
+
+You can change `concurrency` and `timeoutMs` at runtime from the opencode prompt — no config edit or restart required. Type it as a normal message:
+
+```
+/serial -n 2 -t 10m      set both (concurrency=2, timeout=10 minutes)
+/serial -n 4             partial update (timeout unchanged)
+/serial -t 30s           partial update (concurrency unchanged)
+/serial                  print current settings
+/serial reset            restore the opencode.json defaults
+```
+
+Timeout accepts `s` / `m` / `h` / `ms` suffixes or a bare number in milliseconds (`600000`):
+
+```
+600s   10m   2h   500ms   1500
+```
+
+Changes are **persisted** to `<config>/opencode/serial-subagents.json` and survive restarts, overriding whatever is in `opencode.json`. `/serial reset` clears that file and falls back to your config. Set `stateFile: null` in your options to disable persistence entirely.
+
+**How it works:** the plugin hooks `chat.message`, matches any message starting with `/serial`, applies the change, then marks that message part `ignored` so the model never sees it — you just get a one-line confirmation echoed back in the chat. (Because it's a message sniffer rather than a registered command, it won't appear in `/` autocomplete.)
 
 ## How it works
 

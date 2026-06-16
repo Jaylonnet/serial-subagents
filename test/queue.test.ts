@@ -19,7 +19,9 @@ type Hooks = {
 }
 
 async function makeHooks(opts: Record<string, unknown> | undefined): Promise<Hooks> {
-  return (await plugin({} as Parameters<typeof plugin>[0], opts)) as unknown as Hooks
+  // stateFile: null disables persistence so these tests never touch the real
+  // global config file.
+  return (await plugin({} as Parameters<typeof plugin>[0], { stateFile: null, ...opts })) as unknown as Hooks
 }
 
 beforeEach(() => {
