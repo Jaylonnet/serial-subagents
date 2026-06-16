@@ -38,13 +38,13 @@
   ],
   "author": "Jay",
   "license": "MIT",
-  "homepage": "https://github.com/jay/serial-subagents#readme",
+  "homepage": "https://github.com/Jaylonnet/serial-subagents#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jay/serial-subagents.git"
+    "url": "git+https://github.com/Jaylonnet/serial-subagents.git"
   },
   "bugs": {
-    "url": "https://github.com/jay/serial-subagents/issues"
+    "url": "https://github.com/Jaylonnet/serial-subagents/issues"
   },
   "publishConfig": {
     "access": "public"

@@ -10,20 +10,27 @@ This plugin forces strict FIFO execution with a single concurrency slot by defau
 
 ## Install
 
+### Option 1: Drop-in file (no build, no deps)
+
+opencode auto-loads any `.js`/`.ts` file found in `~/.config/opencode/plugins/` (global) or `.opencode/plugins/` (project) at startup, and bun imports `.ts` directly — so you can copy `index.ts` straight in (its only import is type-only and erased at runtime):
+
 ```bash
-npm install opencode-serial-subagents
-# or: bun add opencode-serial-subagents
+mkdir -p ~/.config/opencode/plugins
+curl -fsSL -o ~/.config/opencode/plugins/serial-subagents.ts \
+  https://raw.githubusercontent.com/Jaylonnet/serial-subagents/main/index.ts
 ```
 
-Then add to `~/.config/opencode/opencode.json`:
+Restart opencode and it's active. This uses the default options (`timeoutMs` 5 min, `concurrency` 1). To pass custom options, use Option 2.
+
+### Option 2: Package install (version-managed, supports options)
+
+Add a `package.json` in your opencode config dir pointing at the GitHub repo:
 
 ```json
-{
-  "plugin": ["opencode-serial-subagents"]
-}
+{ "dependencies": { "opencode-serial-subagents": "github:Jaylonnet/serial-subagents" } }
 ```
 
-With options:
+Then reference it (with options) in `~/.config/opencode/opencode.json`:
 
 ```json
 {
@@ -33,7 +40,7 @@ With options:
 }
 ```
 
-For a project-scoped install, add the same to `.opencode/opencode.json` in your project root.
+opencode runs `bun install` on the config-dir `package.json`; the committed `dist/` provides the compiled entry point, so no build step is needed on your machine. For a project-scoped install, use `.opencode/` instead of `~/.config/opencode/`.
 
 ## Config
 
@@ -68,17 +75,6 @@ bun run typecheck  # tsc --noEmit
 bun run build      # emit dist/index.js + dist/index.d.ts
 ```
 
-### Local install (no build required)
-
-opencode's loader (in `packages/opencode/src/plugin/loader.ts`) imports `.ts` files directly via `import(pathToFileURL(match).href)`, so for personal use you can copy `index.ts` straight into your plugin directory:
-
-```bash
-mkdir -p ~/.config/opencode/plugins
-cp index.ts ~/.config/opencode/plugins/serial-subagents.ts
-```
-
-The npm install + opencode.json config is then the same as above.
-
 ### The `__testing__` export
 
 The bottom of `index.ts` exports an `__testing__` object with `acquire`, `release`, `releaseForCall`, `perCall`, `getInFlight`, `setInFlight`, `getWaiters`, `setConcurrency`, `reset`, and `clampOptions`. This is for the test suite only — it is not part of the public API and may change without notice. Don't import it from your own code.
@@ -90,9 +86,9 @@ The bottom of `index.ts` exports an `__testing__` object with `acquire`, `releas
 - Per-tool concurrency limits
 - Optional cancellation of the currently-running call (currently out of scope; we only manage queueing)
 
-## Repo vs npm name
+## Repo vs package name
 
-The npm package is `opencode-serial-subagents`; the source repo is at [github.com/jay/serial-subagents](https://github.com/jay/serial-subagents). The mismatch is intentional — npm uses the `opencode-` prefix for ecosystem discoverability, GitHub URLs don't need it.
+The source repo is at [github.com/Jaylonnet/serial-subagents](https://github.com/Jaylonnet/serial-subagents). The package/import name in `package.json` is `opencode-serial-subagents` (the `opencode-` prefix is an ecosystem convention). It is **not** published to npm — install it from GitHub as shown in [Install](#install).
 
 ## License
 
